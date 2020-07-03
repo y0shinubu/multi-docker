@@ -1,0 +1,22 @@
+sudo: required
+service:
+    - docker
+
+before_install:
+    - docker build -t herc5854/react-test -f ./client/Dockerfile.dev
+
+script:
+    - docker run -e CI=true herc5854/react-test npm test
+
+after_success:
+    - docker build -t herc5854/multi-client ./client
+    - docker build -t herc5854/multi-nginx ./nginx
+    - docker build -t herc5854/multi-server ./server
+    - docker build -t herc5854/multi-worker ./worker
+    
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+    - docker push herc5854/multi-client
+    - docker push herc5854/multi-nginx
+    - docker push herc5854/multi-server
+    - docker push herc5854/multi-worker
