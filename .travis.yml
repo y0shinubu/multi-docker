@@ -3,7 +3,7 @@ service:
     - docker
 
 before_install:
-    - docker build -t y0shinubu/react-test -f ./client/Dockerfile.dev
+    - docker build -t herc5854/react-test -f ./client/Dockerfile.dev ./client
 
 script:
     - docker run -e CI=true herc5854/react-test npm test
